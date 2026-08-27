@@ -67,11 +67,11 @@ Live screen demonstration of the 5 hard-to-find, distinct bugs found during manu
 - **What to say**: *"Bug 1 (SWAG-BUG-001): When logging in with `problem_user`, all product images fail to load their unique images and instead fall back to the same placeholder dog image (`sl-404.jpg`).*
   *Severity: Medium. Impact: It damages user trust, confuses buyers, and leads to accidental wrong purchases."*
 
-#### 3. Bug 2: Checkout Last Name Input Failure (2:00 – 3:30)
-- **Action**: Add an item to cart -> Go to cart -> Click Checkout -> Type in First Name -> Click Last Name and type -> Click Continue.
-- **Show on screen**: The field fails / throws `"Error: Last Name is required"`.
-- **What to say**: *"Bug 2 (SWAG-BUG-002): In Step One of Checkout, the 'Last Name' input field fails to bind state or process input. When the customer clicks Continue, the system throws an unhandled validation error.*
-  *Severity: Critical / Blocker. Impact: Complete loss of conversion. No customer experiencing this bug can ever complete an order."*
+#### 3. Bug 2: Last Name Field Input Mutates First Name Field (2:00 – 3:30)
+- **Action**: Add an item to cart -> Go to cart -> Click Checkout -> Type `John` in First Name -> Click on the Last Name field and type `Doe` -> Show that `Doe` gets typed into the First Name field, while Last Name remains empty -> Click Continue to show the `"Error: Last Name is required"` error.
+- **Show on screen**: The Last Name input keystrokes visibly appearing in the First Name box.
+- **What to say**: *"Bug 2 (SWAG-BUG-002): In Step One of Checkout, there is a severe state-binding bug. When you focus on the 'Last Name' field and type, the keystrokes are incorrectly redirected to the 'First Name' input. Because the Last Name field never receives value, clicking Continue always fails with 'Error: Last Name is required'.*
+  *Severity: Critical / Blocker. Impact: Complete conversion blocker. Users are trapped on Step One and cannot purchase anything."*
 
 #### 4. Bug 3: Malfunctioning 'Add to Cart' and Broken 'Remove' Buttons (3:30 – 4:45)
 - **Action**: Go back to inventory -> Click "Add to cart" on items like Bolt T-Shirt or Fleece Jacket (showing that it is unresponsive / requires multiple clicks). For an added item, click "Remove" on the inventory page and in `/cart.html` (showing that clicking "Remove" fails to remove the product or decrement the cart count).

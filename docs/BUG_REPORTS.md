@@ -11,7 +11,7 @@
 | Bug ID | Summary / Title | Severity | Priority | Affected Component |
 | :--- | :--- | :--- | :--- | :--- |
 | **BUG-01** | Inventory images broken and replaced with dog placeholder image | Medium | High | Catalog / UI |
-| **BUG-02** | Checkout Step One "Last Name" input fails to accept value / blocks progression | Blocker / Critical | Critical | Checkout / Forms |
+| **BUG-02** | Checkout 'Last Name' input erroneously modifies 'First Name' field, blocking progression | Blocker / Critical | Critical | Checkout / Forms |
 | **BUG-03** | Inconsistent 'Add to cart' and broken 'Remove' button states on inventory and cart pages | High | High | Cart / State Management |
 | **BUG-04** | Inventory item title links redirect to incorrect product details page | High | High | Navigation / Routing |
 | **BUG-05** | Checkout Step Two "Finish" button fails to complete transaction | Blocker / Critical | Critical | Checkout / Orders |
@@ -44,7 +44,7 @@ Users cannot visually verify the items they intend to purchase. This destroys bu
 
 ---
 
-### BUG-02: Checkout Step One "Last Name" Input Fails to Register Value
+### BUG-02: Checkout 'Last Name' Input Keystrokes Erroneously Edit 'First Name' Field
 - **Bug ID**: `SWAG-BUG-002`
 - **Severity**: **Critical / Blocker** (Core Business Flow Failure)
 - **Priority**: **Critical (P0)**
@@ -53,21 +53,27 @@ Users cannot visually verify the items they intend to purchase. This destroys bu
 - **Preconditions**: User is logged in as `problem_user` and has added at least one item to the cart.
 
 #### Steps to Reproduce:
-1. Login as `problem_user` and add "Sauce Labs Backpack" to the cart.
+1. Login as `problem_user` and add any item (e.g., "Sauce Labs Backpack") to the cart.
 2. Click the cart icon and click the **"Checkout"** button.
-3. On `/checkout-step-one.html`, enter a valid "First Name" (e.g., `John`).
-4. Click on the **"Last Name"** input field and type `Doe`.
-5. Enter Postal Code: `90210`.
-6. Click the **"Continue"** button.
+3. On `/checkout-step-one.html`, click on the **"First Name"** input field and type `John`.
+4. Click on the **"Last Name"** input field and attempt to type `Doe`.
+5. Observe the text inputs on screen:
+   - Notice that keystrokes typed while focused on "Last Name" actually appear in and modify the **"First Name"** field (changing it to `JohnDoe`).
+   - The **"Last Name"** input box remains completely blank and unaffected.
+6. Enter Postal Code: `90210`.
+7. Click the **"Continue"** button.
 
 #### Expected Result:
-The "Last Name" field accepts user input seamlessly, validation passes, and the user proceeds to `/checkout-step-two.html`.
+The "Last Name" input field should accept and display user keystrokes independently. Clicking "Continue" should validate all fields and proceed to `/checkout-step-two.html`.
 
 #### Actual Result:
-The "Last Name" input component fails to update its state / value correctly or throws an unhandled validation error (`"Error: Last Name is required"`), effectively blocking the user from proceeding with the checkout.
+Typing in the "Last Name" field mutates the "First Name" field value while leaving "Last Name" empty. Consequently, clicking "Continue" always fails with `"Error: Last Name is required"`, completely blocking the user from finishing checkout.
+
+#### Technical Root Cause:
+The `onChange` React event handler for the `#last-name` input DOM element is mistakenly bound to the `firstName` state dispatcher rather than the `lastName` state dispatcher.
 
 #### Business Impact:
-100% loss of conversion for affected users. Customers cannot complete their purchase, causing immediate cart abandonment and revenue loss.
+100% loss of conversion for affected users. Customers cannot complete any purchase, resulting in total transaction failure and abandoned carts.
 
 ---
 
