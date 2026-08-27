@@ -12,7 +12,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **BUG-01** | Inventory images broken and replaced with dog placeholder image | Medium | High | Catalog / UI |
 | **BUG-02** | Checkout Step One "Last Name" input fails to accept value / blocks progression | Blocker / Critical | Critical | Checkout / Forms |
-| **BUG-03** | "Remove" button fails to remove items from cart or update cart badge | High | High | Cart / State Management |
+| **BUG-03** | Inconsistent 'Add to cart' and broken 'Remove' button states on inventory and cart pages | High | High | Cart / State Management |
 | **BUG-04** | Inventory item title links redirect to incorrect product details page | High | High | Navigation / Routing |
 | **BUG-05** | Checkout Step Two "Finish" button fails to complete transaction | Blocker / Critical | Critical | Checkout / Orders |
 
@@ -71,29 +71,34 @@ The "Last Name" input component fails to update its state / value correctly or t
 
 ---
 
-### BUG-03: "Remove" Button Unresponsive for Selected Items in Cart / Inventory
+### BUG-03: Malfunctioning 'Add to Cart' and Broken 'Remove' Button Functionality
 - **Bug ID**: `SWAG-BUG-003`
-- **Severity**: **High** (Functional Breakdown)
+- **Severity**: **High** (Functional & State Management Breakdown)
 - **Priority**: **High**
 - **Affected URL**: `https://www.saucedemo.com/inventory.html` and `https://www.saucedemo.com/cart.html`
 - **User Role**: `problem_user` / `secret_sauce`
 - **Preconditions**: User is logged in as `problem_user`.
 
 #### Steps to Reproduce:
-1. Login as `problem_user`.
-2. Click "Add to cart" on "Sauce Labs Backpack" and "Sauce Labs Fleece Jacket".
-3. Verify the cart badge shows `2`.
-4. Click the "Remove" button on "Sauce Labs Fleece Jacket".
-5. Navigate to `/cart.html` and click "Remove" again.
+1. Navigate to `https://www.saucedemo.com` and login as `problem_user`.
+2. On `/inventory.html`, click the **"Add to cart"** button on multiple different items (e.g., "Sauce Labs Bolt T-Shirt", "Sauce Labs Fleece Jacket", "Sauce Labs Onesie").
+   - *Observation A*: For some items, clicking "Add to cart" fails completely or requires repeated clicks because the event listener does not fire properly.
+3. For an item that successfully gets added (where the button toggles to "Remove" and the cart badge increments):
+   - Click the **"Remove"** button directly on the inventory page.
+   - *Observation B*: The button stays stuck in the "Remove" state and the cart badge count does not decrement.
+4. Click on the Shopping Cart icon to go to `/cart.html`.
+5. Click the **"Remove"** button next to the added item inside the cart.
 
 #### Expected Result:
-The item is removed from the cart list, the button toggles back to "Add to cart", and the shopping cart badge count decrements by 1.
+- Clicking "Add to cart" should immediately add the item and toggle the button to "Remove".
+- Clicking "Remove" (on either the inventory or cart page) should immediately remove the product from the cart, toggle the button back to "Add to cart", and decrement the shopping cart badge count.
 
 #### Actual Result:
-Clicking the "Remove" button on specific items does not trigger the removal event handler. The button remains in the "Remove" state, the cart badge count does not decrement, and the item persists in the cart.
+- The "Add to cart" button is inconsistent and unresponsive on certain items.
+- Once an item is added, clicking the "Remove" button fails to trigger item removal: the button remains in the "Remove" state, the cart counter does not decrement, and the item cannot be removed from the cart page.
 
 #### Business Impact:
-Customers are unable to modify their cart before purchase, forcing them to buy unwanted items or abandon the entire cart.
+Severe disruption to the core shopping workflow. Customers struggle to add desired items, and once added, are unable to modify or remove products from their cart before checkout, causing customer frustration and high cart abandonment.
 
 ---
 

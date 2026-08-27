@@ -73,11 +73,11 @@ Live screen demonstration of the 5 hard-to-find, distinct bugs found during manu
 - **What to say**: *"Bug 2 (SWAG-BUG-002): In Step One of Checkout, the 'Last Name' input field fails to bind state or process input. When the customer clicks Continue, the system throws an unhandled validation error.*
   *Severity: Critical / Blocker. Impact: Complete loss of conversion. No customer experiencing this bug can ever complete an order."*
 
-#### 4. Bug 3: Unresponsive Cart Item Removal (3:30 – 4:45)
-- **Action**: Go back to inventory -> Click "Add to cart" on Fleece Jacket and Backpack -> Click "Remove" on Fleece Jacket.
-- **Show on screen**: The button does not toggle and cart badge stays `2`.
-- **What to say**: *"Bug 3 (SWAG-BUG-003): The 'Remove' button fails to trigger item removal for specific items like the Fleece Jacket. Even in the cart page, clicking remove does not decrement the cart count.*
-  *Severity: High. Impact: Users cannot modify their basket, leading to frustration and abandoned carts."*
+#### 4. Bug 3: Malfunctioning 'Add to Cart' and Broken 'Remove' Buttons (3:30 – 4:45)
+- **Action**: Go back to inventory -> Click "Add to cart" on items like Bolt T-Shirt or Fleece Jacket (showing that it is unresponsive / requires multiple clicks). For an added item, click "Remove" on the inventory page and in `/cart.html` (showing that clicking "Remove" fails to remove the product or decrement the cart count).
+- **Show on screen**: The "Add to cart" button failing to respond, and the "Remove" button failing to remove items or update the cart counter.
+- **What to say**: *"Bug 3 (SWAG-BUG-003): The cart interaction state has two major flaws with `problem_user`. First, the 'Add to cart' button is unresponsive or fails intermittently on certain products. Second, once an item is added, clicking the 'Remove' button—both on the inventory page and in the cart—fails to remove the item or decrement the badge count.*
+  *Severity: High. Impact: Users cannot reliably add items, and are prevented from modifying their cart before checkout, causing severe friction and cart abandonment."*
 
 #### 5. Bug 4: Product Detail Link Navigation Mismatch (4:45 – 6:00)
 - **Action**: Click on the title link of "Sauce Labs Fleece Jacket" or "Sauce Labs Onesie".
